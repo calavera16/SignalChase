@@ -1,0 +1,129 @@
+.findings-player {
+  min-width: 0;
+  color: var(--text);
+}
+.findings-player h3 {
+  margin: 0 0 0.4rem;
+}
+.findings-picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--plot-bg, #fff);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.findings-picture-viewport {
+  max-width: 100%;
+  min-width: 0;
+}
+.findings-player:fullscreen {
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  padding: 1rem;
+  overflow-y: auto;
+}
+.findings-player[data-composition="landscape"]:fullscreen .findings-picture {
+  max-height: 76vh;
+  object-fit: contain;
+}
+.findings-player:fullscreen .findings-status,
+.findings-player:fullscreen > h3 {
+  display: none;
+}
+.findings-picture[hidden],
+.findings-player [hidden] {
+  display: none;
+}
+.findings-status,
+.findings-scope,
+.findings-guide-source,
+.findings-export p {
+  color: var(--secondary);
+  font-size: 0.875rem;
+}
+.findings-caption {
+  font-size: 1.125rem;
+  font-weight: 550;
+  margin: 0.7rem 0 0.2rem;
+}
+.findings-guide-source {
+  margin: 0.2rem 0 0.6rem;
+  line-height: 1.45;
+}
+.findings-scope {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  margin: 0.25rem 0 0.7rem;
+}
+.findings-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.findings-controls label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1 1 18rem;
+  font-size: 0.875rem;
+  min-width: 0;
+}
+.findings-controls input {
+  flex: 1;
+  min-width: 4rem;
+  accent-color: var(--accent);
+}
+.findings-controls output {
+  min-width: 7rem;
+  text-align: right;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.findings-player button,
+.findings-export a {
+  min-height: 44px;
+}
+.findings-player details {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+.findings-player details summary {
+  cursor: pointer;
+}
+.findings-player details p {
+  max-width: 85ch;
+  color: var(--secondary);
+  overflow-wrap: anywhere;
+}
+.findings-export {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+.findings-export a {
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 40rem) {
+  .findings-controls label {
+    flex-basis: 100%;
+  }
+  .findings-controls button {
+    flex: 1 1 auto;
+  }
+  .findings-caption {
+    font-size: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .findings-player *,
+  .findings-player *::before,
+  .findings-player *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

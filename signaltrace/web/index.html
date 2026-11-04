@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SignalTrace · Research workspace</title>
+    <link rel="stylesheet" href="/app.css" />
+    <link rel="stylesheet" href="/findings.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to recording workspace</a>
+    <header class="studio-rail">
+      <a href="/" class="brand"
+        ><span class="brandmark" aria-hidden="true"
+          ><svg
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 17h7l4-10 6 19 4-12 3 3h4"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="square"
+            ></path></svg></span
+        >SignalTrace</a
+      >
+      <span class="workspace-label">Local research workspace</span>
+      <div class="meta-key-control">
+        <button
+          id="meta-credentials-open"
+          type="button"
+          class="secondary"
+          aria-haspopup="dialog"
+          aria-controls="meta-credentials-dialog"
+          aria-describedby="meta-credentials-summary"
+        >
+          Set up Meta key
+        </button>
+        <span id="meta-credentials-summary" class="sr-only"
+          >Checking local key configuration…</span
+        >
+      </div>
+      <button
+        id="retained-results-open"
+        type="button"
+        class="secondary"
+        aria-haspopup="dialog"
+        aria-controls="retained-results-dialog"
+      >
+        Saved results
+      </button>
+
+      <section id="current-recording" hidden="" aria-label="Current recording">
+        <h2>Current recording</h2>
+        <button
+          id="current-recording-open"
+          type="button"
+          class="secondary"
+        ></button>
+        <p id="current-recording-scope"></p>
+      </section>
+      <section id="session-resume" hidden="" aria-labelledby="session-title">
+        <h2 id="session-title">Session experiments</h2>
+        <button
+          id="session-library-toggle"
+          type="button"
+          class="secondary"
+          aria-controls="session-library"
+          aria-expanded="true"
+        >
+          Hide session experiments
+        </button>
+        <div id="session-library">
+          <ul id="session-list" aria-label="Session experiments"></ul>
+          <p>
+            In memory: up to 8 experiments, 8 runs each. Export to keep your
+            work.
+          </p>
+        </div>
+      </section>
+      <label class="theme-control" for="theme-preference">
+        Appearance
+        <select id="theme-preference" aria-label="Color theme">
+          <option value="system" selected>System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>
+    </header>
+    <main id="main-content" tabindex="-1">
+      <nav class="step-nav" aria-label="Workspace views">
+        <button id="step-nav-open" type="button" class="secondary">
+          1 Set up
+        </button>
+        <button id="step-nav-inspect" type="button" class="secondary">
+          2 Inspect
+        </button>
+        <button id="step-nav-compare" type="button" class="secondary">
+          3 Investigate
+        </button>
+        <button id="step-nav-export" type="button" class="secondary">
+          4 Results
+        </button>
+      </nav>
+      <p id="experiment-context" class="experiment-context" hidden=""></p>
+      <p id="journey-context" class="journey-context"></p>
+      <div class="message-area">
+        <div id="request-activity" class="request-activity" hidden="">
+          <span class="activity-track" aria-hidden="true"><span></span></span
+          ><span>Working locally</span>
+        </div>
+        <div id="status" role="status" aria-live="polite">
+          Loading local workspace...
+        </div>
+        <div id="error" role="alert" hidden=""></div>
+      </div>
+
+      <section
+        id="step-open"
+        class="workflow-step"
+        aria-labelledby="open-title"
+      >
+        <div class="stage-heading">
+          <h1 id="open-title" tabindex="-1">Open a recording</h1>
+          <p id="opening-lead">
+            See how preprocessing changes your measurement. Meta investigates
+            the evidence and directs a short findings video.
+          </p>
+          <p id="setup-guide">
+            Start with a recording and a question. Meta runs only with your
+            explicit consent.
+          </p>
+        </div>
+        <div class="recording-navigation">
+          <button
+            id="change-recording"
+            type="button"
+            class="secondary"
+            hidden=""
+          >
+            Change recording
+          </button>
+          <button
+            id="return-recording"
+            type="button"
+            class="secondary"
+            hidden=""
+          >
+            Return to current recording
+          </button>
+        </div>
+        <section
+          id="source-picker"
+          class="source-picker"
+          aria-label="Open recording"
+        >
+          <div class="opening-actions">
+            <label class="file-label"
+              >Open CSV<input id="csv-file" type="file" accept=".csv,text/csv"
+            /></label>
+            <button id="open-demo" type="button" class="secondary" disabled="">
+              Try sample recording
+            </button>
+          </div>
+          <button
+            id="sample-chooser-toggle"
+            type="button"
+            class="secondary"
+            aria-controls="sample-chooser"
+            aria-expanded="false"
+          >
+            Choose sample
+          </button>
+          <div id="sample-chooser" hidden="">
+            <label
+              >Sample recording<select id="demo-select" disabled="">
+                <option>Loading catalogue...</option>
+              </select></label
+            >
+          </div>
+          <div class="opening-outcome" aria-label="What the workspace produces">
+            <h2>From a preprocessing question to evidence you can replay</h2>
+            <ol>
+              <li>
+                <strong>Question</strong
+                ><span
+                  >Define timing or waveform sensitivity on an exact
+                  interval</span
+                >
+              </li>
+              <li>
+                <strong>Measured comparison</strong
+                ><span
+                  >Inspect local measurements, tested settings and
+                  exclusions</span
+                >
+              </li>
+              <li>
+                <strong>Animated findings</strong
+                ><span
+                  >Watch the finding, inspect its detailed report and keep exact
+                  replay data</span
+                >
+              </li>
+            </ol>
+            <p>
+              Try sample recording opens an included signal. Analysis runs only
+              when requested; Meta investigation requires explicit consent.
+            </p>
+          </div>
+        </section>
+        <section
+          id="import-panel"
+          class="opening-mapping"
+          hidden=""
+          aria-labelledby="import-title"
+        >
+          <div class="section-heading">
+            <h2 id="import-title">Columns and units</h2>
+            <span id="import-name"></span>
+          </div>
+          <p>
+            Declare time, channels and modality explicitly. Empty signal cells
+            stay missing; timestamps are never repaired.
+          </p>
+          <form id="import-form">
+            <div class="control-grid">
+              <label
+                >Modality<select id="import-modality">
+                  <option value="ppg">PPG</option>
+                  <option value="ecg">ECG · inspection only</option>
+                  <option value="eeg">EEG · inspection only</option>
+                  <option value="other">Other · inspection only</option>
+                </select></label
+              ><label
+                >Time column<select
+                  id="time-column"
+                  required=""
+                ></select></label
+              ><label
+                >Time unit<select id="time-unit">
+                  <option value="s">Seconds (s)</option>
+                  <option value="ms">Milliseconds (ms)</option>
+                </select></label
+              ><label
+                >Signal unit<input
+                  id="signal-unit"
+                  maxlength="24"
+                  value="a.u."
+                  required=""
+              /></label>
+            </div>
+            <fieldset id="signal-columns">
+              <legend>Signal channels (choose up to eight)</legend>
+            </fieldset>
+            <section class="">
+              <h3>Preview first rows</h3>
+              <div
+                id="preview-table"
+                class="table-scroll"
+                role="region"
+                aria-label="CSV preview"
+                tabindex="0"
+              ></div>
+            </section>
+            <div class="button-row">
+              <button type="submit" id="import-submit">Import recording</button>
+            </div>
+          </form>
+          <button type="button" id="import-cancel" class="secondary">
+            Cancel import
+          </button>
+        </section>
+
+        <section
+          id="inspection-entry"
+          aria-labelledby="inspection-entry-name"
+          hidden=""
+        >
+          <h2 id="inspection-entry-name"></h2>
+          <p id="inspection-entry-note"></p>
+        </section>
+
+        <form
+          id="protocol-form"
+          class="opening-protocol"
+          hidden=""
+          aria-labelledby="protocol-title"
+        >
+          <h2 id="protocol-title">Experiment protocol</h2>
+          <p id="setup-recording"></p>
+          <div class="protocol-fields">
+            <label
+              >Experiment name<input
+                id="experiment-name"
+                maxlength="120"
+                required=""
+            /></label>
+            <label class="wide-field"
+              >Your investigation question (optional)<textarea
+                id="research-question"
+                maxlength="500"
+                rows="2"
+              ></textarea>
+            </label>
+          </div>
+
+          <fieldset>
+            <legend>What will you measure?</legend>
+            <div class="radio-inputs">
+              <label class="radio"
+                ><input
+                  id="target-pulse"
+                  type="radio"
+                  name="protocol-target"
+                  value="pulse_timing"
+                  checked=""
+                /><span class="name"
+                  ><span class="choice-text"
+                    ><strong>Pulse timing</strong
+                    ><small
+                      >Measure peak-candidate timing sensitivity, not verified
+                      heartbeats.</small
+                    ></span
+                  ></span
+                ></label
+              >
+              <label class="radio"
+                ><input
+                  id="target-waveform"
+                  type="radio"
+                  name="protocol-target"
+                  value="waveform_sensitivity"
+                /><span class="name"
+                  ><span class="choice-text"
+                    ><strong>Waveform shape</strong
+                    ><small
+                      >Measure how much the signal's overall shape
+                      changes.</small
+                    ></span
+                  ></span
+                ></label
+              >
+            </div>
+          </fieldset>
+
+          <button
+            id="protocol-details-toggle"
+            type="button"
+            class="secondary panel-toggle"
+            data-label="protocol details"
+            aria-controls="protocol-details"
+            aria-expanded="false"
+          >
+            Show protocol details
+          </button>
+          <section id="protocol-details" class="expert-panel" hidden="">
+            <fieldset>
+              <legend>How will you evaluate it?</legend>
+              <div class="radio-inputs">
+                <label class="radio"
+                  ><input
+                    id="evaluation-original"
+                    type="radio"
+                    name="protocol-evaluation"
+                    value="original_sensitivity"
+                    checked=""
+                  /><span class="name">Change from original</span></label
+                >
+                <label class="radio"
+                  ><input
+                    id="evaluation-synthetic"
+                    type="radio"
+                    name="protocol-evaluation"
+                    value="synthetic_reference"
+                  /><span class="name">Synthetic reference</span></label
+                >
+              </div>
+              <p id="evaluation-help"></p>
+            </fieldset>
+            <h3>Protocol details</h3>
+            <p class="choice-help">
+              Original comparison measures change. An available synthetic
+              reference measures error against that generated signal, not
+              clinical accuracy.
+            </p>
+
+            <label
+              >Task<select id="experiment-task">
+                <option value="ppg_preprocessing">PPG preprocessing</option>
+                <option disabled="">Sleep classification - unavailable</option>
+                <option disabled="">
+                  HRV feature engineering - unavailable
+                </option>
+              </select></label
+            >
+
+            <p>
+              Offline processing. Both filters use future samples. The protocol
+              is immutable after saving; edits start a new experiment.
+            </p>
+            <label
+              >Notes (optional)<textarea
+                id="protocol-notes"
+                maxlength="1000"
+                rows="3"
+              ></textarea>
+            </label>
+          </section>
+          <p id="protocol-state" role="status"></p>
+          <button id="start-experiment" type="submit">
+            Save setup &amp; continue to Inspect
+          </button>
+        </form>
+
+        <div class="step-actions">
+          <button id="continue-inspect" type="button" class="secondary">
+            Continue with current recording
+          </button>
+        </div>
+      </section>
+      <section
+        id="step-inspect"
+        class="workflow-step"
+        hidden=""
+        aria-labelledby="inspect-title"
+      >
+        <div class="stage-heading">
+          <h1 id="inspect-title" tabindex="-1">
+            Inspect the original recording
+          </h1>
+          <p>
+            Check the original waveform and recording issues. Choose a useful
+            interval to investigate. These checks run locally; Meta has not been
+            used at this step.
+          </p>
+        </div>
+        <section class="recording-header">
+          <div>
+            <span id="recording-modality" class="eyebrow"></span>
+            <h2 id="recording-name" tabindex="-1"></h2>
+            <p id="recording-summary" class="subtle"></p>
+          </div>
+          <span class="preserved">Original preserved</span>
+        </section>
+        <div id="inspect-waveform">
+          <section
+            class="waveform-panel"
+            aria-labelledby="waveform-title"
+            id="waveform-panel"
+          >
+            <div class="section-heading">
+              <h2 id="waveform-title" tabindex="-1">Waveform</h2>
+              <span id="plot-unit" class="subtle"></span>
+            </div>
+            <div class="plot-controls" id="inspect-channel">
+              <label id="channel-control" hidden=""
+                >Channel<select id="channel"></select
+              ></label>
+              <label id="overlay-control" hidden=""
+                >Show filter<select id="plot-method" disabled="">
+                  <option value="median">Median subtraction</option>
+                  <option value="highpass">High-pass</option>
+                  <option value="all">Both filters</option>
+                  <option value="original">Original only</option>
+                </select></label
+              >
+              <label class="check-label" id="reference-control" hidden=""
+                ><input type="checkbox" id="show-reference" />Synthetic
+                reference (evaluation only)</label
+              >
+            </div>
+            <section
+              class="recording-overview"
+              aria-labelledby="overview-title"
+            >
+              <h3 id="overview-title">Full recording / original channel</h3>
+              <p id="overview-help" class="subtle">
+                Click or drag to navigate; use arrow keys or exact Display
+                start/end fields below. More in Show waveform guide.
+              </p>
+              <svg
+                id="recording-overview"
+                viewBox="0 0 1000 120"
+                preserveAspectRatio="none"
+                tabindex="0"
+                role="group"
+                aria-label="Full recording overview navigation"
+                aria-describedby="overview-help overview-note"
+              >
+                <path id="overview-path"></path>
+                <rect
+                  id="overview-analysis"
+                  y="2"
+                  height="116"
+                  hidden=""
+                ></rect>
+                <rect id="overview-selection" y="4" height="112"></rect>
+              </svg>
+              <p id="overview-note" class="subtle"></p>
+              <button
+                id="overview-inspect"
+                type="button"
+                class="secondary"
+                hidden=""
+              >
+                Inspect whole recording
+              </button>
+            </section>
+            <div id="legend" class="legend"></div>
+            <div
+              id="chart"
+              class="chart"
+              role="img"
+              aria-label="Signal waveform"
+            ></div>
+            <div class="zoom-row">
+              <button
+                type="button"
+                id="zoom-prev"
+                class="secondary"
+                aria-label="Previous display interval"
+              >
+                Previous
+              </button>
+              <label
+                >Display span<select id="zoom-span">
+                  <option value="5">5 seconds</option>
+                  <option value="10" selected="">10 seconds</option>
+                  <option value="30">30 seconds</option>
+                  <option value="all">Full interval</option>
+                  <option value="custom">Custom range</option>
+                </select></label
+              >
+              <button
+                type="button"
+                id="zoom-next"
+                class="secondary"
+                aria-label="Next display interval"
+              >
+                Next
+              </button>
+            </div>
+            <div class="plot-caption">
+              <span id="display-note" class="subtle"></span
+              ><span id="window-label" class="subtle"></span>
+            </div>
+            <button
+              id="waveform-guide-toggle"
+              type="button"
+              class="secondary panel-toggle"
+              data-label="waveform guide"
+              aria-controls="waveform-guide"
+              aria-expanded="false"
+            >
+              Show waveform guide
+            </button>
+            <section
+              id="waveform-guide"
+              class="inspect-guide"
+              hidden=""
+              aria-labelledby="waveform-guide-title"
+            >
+              <h3 id="waveform-guide-title">Read the trace</h3>
+              <p id="guide-source"></p>
+              <p id="guide-window"></p>
+              <p id="guide-integrity"></p>
+              <p>
+                Click the overview to relocate the displayed interval; drag in
+                either direction to select a range. Left/Right move the view;
+                Home/End move to its limits. Display start/end and View set an
+                exact range; Full displayed interval resets it. These controls
+                do not run analysis or change the comparison range.
+              </p>
+              <p>
+                The full-recording overview uses original samples only.
+                Display-only reduction retains first, last, minimum and maximum
+                samples in up to 1,000 time bins. Bins containing gaps or
+                missing values show disconnected extrema marks rather than
+                joining across breaks. The detailed plot remains separate;
+                calculations always use unreduced samples.
+              </p>
+              <p id="guide-exclusions" hidden="">
+                Shading marks samples excluded from the plotted analysis.
+                Original samples remain unchanged; full exclusion counts are in
+                technical evidence.
+              </p>
+            </section>
+            <section id="display-details" class="">
+              <div class="button-row">
+                <label
+                  >Display start (s)<input
+                    id="zoom-start"
+                    type="number"
+                    step="any" /></label
+                ><label
+                  >Display end (s)<input
+                    id="zoom-end"
+                    type="number"
+                    step="any" /></label
+                ><button type="button" id="zoom-apply" class="secondary">
+                  View
+                </button>
+                <button type="button" id="zoom-reset" class="secondary">
+                  Full displayed interval
+                </button>
+              </div>
+              <p id="display-error" role="status"></p>
+              <p>
+                Display controls change the view. Your comparison range stays
+                the same.
+              </p>
+            </section>
+          </section>
+        </div>
+        <section id="recording-checks" class="panel">
+          <h2>Signal quality checks</h2>
+          <p class="subtle">
+            These checks describe the recording structure. They are not a
+            diagnosis.
+          </p>
+          <div id="integrity"></div>
+          <ul id="warnings"></ul>
+          <h3>Located recording issues</h3>
+          <p
+            id="issue-summary"
+            class="subtle"
+            aria-live="polite"
+            tabindex="-1"
+          ></p>
+          <div id="issue-list"></div>
+          <div class="button-row">
+            <button id="issues-prev" type="button" class="secondary">
+              Previous issues
+            </button>
+            <button id="issues-next" type="button" class="secondary">
+              Next issues
+            </button>
+          </div>
+        </section>
+        <p id="module-note" class="subtle"></p>
+        <button
+          id="inspection-details-toggle"
+          type="button"
+          class="secondary panel-toggle"
+          data-label="recording details"
+          aria-controls="inspection-details"
+          aria-expanded="false"
+        >
+          Show recording details
+        </button>
+        <section id="inspection-details" class="expert-panel" hidden="">
+          <h3>Recording integrity &amp; provenance</h3>
+
+          <pre id="provenance"></pre>
+        </section>
+        <div class="step-actions">
+          <button id="back-open" type="button" class="secondary">
+            Back to Set up</button
+          ><button id="continue-compare" type="button">
+            Continue to Investigate
+          </button>
+        </div>
+      </section>
+      <section
+        id="step-compare"
+        class="workflow-step"
+        hidden=""
+        aria-labelledby="compare-title"
+      >
+        <div class="stage-heading">
+          <h1 id="compare-title" tabindex="-1">Investigate with Meta</h1>
+          <p>
+            Confirm the interval, then ask Meta to investigate your question.
+            Meta chooses bounded tests; SignalTrace computes measurements
+            locally. Meta returns an evidence-cited proposal or questions for
+            your review.
+          </p>
+        </div>
+        <section class="compare-panel" aria-labelledby="setup-title">
+          <div class="section-heading">
+            <h2 id="setup-title">Confirm channel and investigation interval</h2>
+            <span id="analysis-state" class="status-pill">Not analyzed</span>
+          </div>
+          <p class="comparison-intro">
+            This exact channel and interval apply to the next Meta investigation
+            or optional manual comparison.
+          </p>
+          <form id="analysis-form" novalidate="">
+            <div id="compare-channel"></div>
+            <div class="comparison-range">
+              <div class="selection-context">
+                <span class="subtle">Comparison range</span>
+                <p id="range-summary"></p>
+              </div>
+              <section id="range-details" class="">
+                <div class="range-actions">
+                  <button id="full-window" class="secondary" type="button">
+                    Full recording</button
+                  ><button type="button" id="use-visible" class="secondary">
+                    Use visible window
+                  </button>
+                </div>
+                <div class="range-inputs">
+                  <label
+                    >Start (s)<input
+                      type="number"
+                      id="window-start"
+                      step="any"
+                      required=""
+                      aria-describedby="range-help analysis-limit"
+                  /></label>
+                  <label
+                    >End (s), exclusive<input
+                      type="number"
+                      id="window-end"
+                      step="any"
+                      required=""
+                      aria-describedby="range-help analysis-limit"
+                  /></label>
+                </div>
+                <p id="range-help">
+                  The start is included; the end is excluded. Full recording
+                  includes the last sample. Exact values are kept when you use
+                  the visible window.
+                </p>
+                <p id="analysis-limit" class="subtle">
+                  Analysis accepts at most 30,000 samples per run. For longer
+                  recordings, choose a shorter interval.
+                </p>
+              </section>
+            </div>
+
+            <input id="goal" type="hidden" value="pulse_timing" />
+          </form>
+        </section>
+        <section
+          id="investigation-panel"
+          class="investigation-panel"
+          aria-labelledby="investigation-title"
+        >
+          <h2 id="investigation-title">Ask Meta to investigate</h2>
+          <p>
+            Meta chooses preprocessing tests based on your measurement needs.
+            SignalTrace checks the results and shows which tested settings meet
+            your confirmed limits, with supporting evidence.
+          </p>
+          <p id="investigation-config" role="status">
+            Checking server configuration…
+          </p>
+          <form id="investigation-form">
+            <label
+              >Question for this run only<textarea
+                id="investigation-question"
+                maxlength="500"
+                rows="2"
+                required=""
+              ></textarea>
+            </label>
+            <p>
+              Starts from your saved question. Edits here apply only to this
+              investigation; its report keeps the question actually used.
+            </p>
+            <label
+              >Acquisition notes (optional)<textarea
+                id="investigation-notes"
+                maxlength="1000"
+                rows="2"
+              ></textarea>
+            </label>
+            <button
+              id="requirements-options-toggle"
+              type="button"
+              class="secondary panel-toggle"
+              data-label="research limits (optional)"
+              aria-controls="requirements-options"
+              aria-expanded="false"
+            >
+              Show research limits (optional)
+            </button>
+            <section id="requirements-options" class="expert-panel" hidden>
+              <fieldset id="requirements-form">
+                <legend>Research requirements (optional)</legend>
+                <label class="investigation-consent"
+                  ><input id="requirements-enabled" type="checkbox" />Check
+                  explicit limits for my experiment</label
+                >
+                <p id="requirements-help">
+                  Add limits from your research protocol to guide Meta's next
+                  tests. Blank means not requested; no clinical thresholds are
+                  supplied. Leave this off to explore without numeric limits.
+                </p>
+                <div id="requirements-fields" hidden>
+                  <label
+                    >Processed method to check<select
+                      id="requirements-method"
+                      aria-describedby="requirements-help"
+                    >
+                      <option value="">Choose a method</option>
+                      <option value="highpass">High-pass</option>
+                      <option value="median">Median subtraction</option>
+                    </select></label
+                  >
+                  <div class="requirements-grid">
+                    <label
+                      >Maximum matched-candidate timing shift (ms)<input
+                        id="requirement-max_timing_shift_ms"
+                        type="number"
+                        min="0"
+                        step="any"
+                        inputmode="decimal"
+                    /></label>
+                    <label
+                      >Maximum total unmatched candidates (processed +
+                      original)<input
+                        id="requirement-max_unmatched_candidates"
+                        type="number"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                    /></label>
+                    <label
+                      >Minimum usable sample fraction (0–1)<input
+                        id="requirement-min_usable_fraction"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="any"
+                        inputmode="decimal"
+                    /></label>
+                    <label
+                      >Maximum normalized waveform difference (unitless)<input
+                        id="requirement-max_waveform_difference"
+                        type="number"
+                        min="0"
+                        step="any"
+                        inputmode="decimal"
+                    /></label>
+                  </div>
+                  <p>
+                    Timing uses the maximum shift among matched algorithmic
+                    candidates. Unmatched counts include both sides. Usable
+                    fraction is the share of samples usable by all compared
+                    methods after exclusions. Waveform difference is normalized
+                    by the original signal's standard deviation. These measure
+                    change against the original, not physiological accuracy.
+                  </p>
+                  <label class="investigation-consent"
+                    ><input id="requirements-confirmed" type="checkbox" />I
+                    confirm these limits reflect my research requirements for
+                    the selected method and interval.</label
+                  >
+                </div>
+                <p
+                  id="requirements-status"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+              </fieldset>
+            </section>
+            <p id="investigation-current-scope"></p>
+            <p id="investigation-disclosure">
+              Each run sends your question, notes, target, confirmed
+              requirements and bounded numerical inspection/comparison summaries
+              to Meta (muse-spark-1.3), using stateless requests. Raw waveforms,
+              file/channel names, source labels and provenance stay local. Do
+              not include identifying or secret information in question or
+              notes. All comparisons use original samples, including experiments
+              saved with synthetic-reference evaluation. This measures change,
+              not physiological accuracy. The API key stays in the server
+              process; it is never entered or stored here.
+            </p>
+            <label class="investigation-consent"
+              ><input
+                id="investigation-consent"
+                type="checkbox"
+                aria-describedby="investigation-disclosure"
+              />I allow these bounded requests to Meta for this run.</label
+            >
+            <div class="button-row">
+              <button id="investigate" type="submit">
+                Investigate with Meta</button
+              ><button
+                id="investigation-refresh"
+                type="button"
+                class="secondary"
+              >
+                Refresh investigation status
+              </button>
+            </div>
+          </form>
+          <p id="investigation-status" role="status" aria-live="polite"></p>
+          <ol
+            id="investigation-trace"
+            aria-label="Actual investigation tool activity"
+          ></ol>
+          <p id="investigation-error" role="alert" hidden=""></p>
+          <label id="investigation-history-label" hidden=""
+            >Retained investigations<select id="investigation-history"></select
+          ></label>
+          <section
+            id="investigation-result"
+            hidden=""
+            aria-labelledby="investigation-result-title"
+          >
+            <h3 id="investigation-result-title" tabindex="-1"></h3>
+            <p id="investigation-failure-detail" hidden=""></p>
+            <p id="investigation-scope"></p>
+            <p
+              id="investigation-historical"
+              class="comparison-warning"
+              hidden=""
+            ></p>
+            <p id="investigation-question-used"></p>
+            <section id="investigation-requirements" hidden></section>
+            <div id="investigation-story" hidden=""></div>
+            <h4>Unverified model proposal</h4>
+            <p id="investigation-narrative"></p>
+            <p id="investigation-proposal-note">
+              The model narrative is an unverified proposal. Local sensitivity
+              measurements do not establish superiority, physiological truth or
+              a universal best filter.
+            </p>
+            <ul id="investigation-questions"></ul>
+            <details id="investigation-evidence-details">
+              <summary>Exact comparison settings and measurements</summary>
+              <nav
+                id="investigation-citations"
+                aria-label="Investigation evidence citations"
+              ></nav>
+              <div id="investigation-evidence"></div>
+            </details>
+            <div id="investigation-visuals"></div>
+            <ul id="investigation-limitations"></ul>
+            <button
+              id="export-investigation"
+              type="button"
+              class="secondary"
+              hidden=""
+            >
+              Download investigation for replay
+            </button>
+            <p id="investigation-export-status" role="status"></p>
+            <button type="button" id="review-investigation">
+              Review this investigation &amp; make report
+            </button>
+          </section>
+        </section>
+        <div id="compare-waveform"><p id="comparison-waveform-source"></p></div>
+        <button
+          id="manual-comparison-toggle"
+          type="button"
+          class="secondary panel-toggle"
+          data-label="offline manual comparison"
+          aria-controls="manual-comparison"
+          aria-expanded="false"
+        >
+          Show offline manual comparison
+        </button>
+        <section id="manual-comparison" hidden="">
+          <h2>Manual comparison (offline)</h2>
+          <p>
+            Choose filter settings and run the fixed local comparison yourself.
+            This path does not use Meta.
+          </p>
+          <div class="comparison-controls">
+            <button
+              id="parameters-toggle"
+              type="button"
+              class="secondary panel-toggle"
+              data-label="filter settings"
+              aria-controls="parameters"
+              aria-expanded="false"
+            >
+              Show filter settings
+            </button>
+            <section id="parameters" class="expert-panel" hidden="">
+              <h3>Filter settings</h3>
+              <div class="control-grid parameters">
+                <label
+                  >Median window (s)<input
+                    id="median-window"
+                    type="number"
+                    value="2"
+                    min="0.5"
+                    max="5"
+                    step="0.1"
+                    required=""
+                    form="analysis-form"
+                /></label>
+                <label
+                  >High-pass cutoff (Hz)<input
+                    id="highpass"
+                    type="number"
+                    value="0.35"
+                    min="0.1"
+                    max="1"
+                    step="0.01"
+                    required=""
+                    form="analysis-form"
+                /></label>
+                <label
+                  >Boundary guard (s)<input
+                    id="edge-guard"
+                    type="number"
+                    value="3"
+                    min="3"
+                    max="10"
+                    step="0.1"
+                    required=""
+                    form="analysis-form"
+                /></label>
+              </div>
+              <p>
+                Median subtraction and second-order Butterworth high-pass use
+                future samples. The guard reduces boundary effects; it does not
+                prove their absence. All methods use the same valid samples,
+                with no interpolation.
+              </p>
+            </section>
+            <button id="analyze" type="submit" form="analysis-form">
+              Run comparison
+            </button>
+            <p class="comparison-help">
+              Runs unchanged samples, median subtraction and high-pass together.
+            </p>
+          </div>
+
+          <section id="results" hidden="" aria-labelledby="results-title">
+            <div class="section-heading">
+              <h2 id="results-title" tabindex="-1">Comparison results</h2>
+            </div>
+            <div class="result-context">
+              <span id="comparison-label" class="status-pill"></span
+              ><span id="exclusion-summary"></span>
+            </div>
+            <p id="results-intro" class="results-intro"></p>
+            <p id="goal-note" class="subtle"></p>
+            <p class="subtle">
+              Summaries are rounded for reading; exact values are in Show
+              technical evidence and JSON exports.
+            </p>
+            <div
+              id="method-comparison"
+              class="method-comparison"
+              aria-label="Method comparison for the full analyzed window"
+            ></div>
+            <button type="button" id="review-manual">
+              Review this manual comparison &amp; make report
+            </button>
+          </section>
+          <section
+            id="history-panel"
+            class="panel"
+            aria-labelledby="history-title"
+          >
+            <h2 id="history-title">Your saved runs</h2>
+            <p id="history-status" role="status">
+              Start an experiment to save comparisons.
+            </p>
+            <p id="history-selection" role="status" aria-live="polite">
+              0/2 runs selected for comparison
+            </p>
+            <p id="history-empty">
+              Start an experiment, then select Run comparison to save your first
+              run.
+            </p>
+            <div id="run-history"></div>
+            <section
+              id="run-comparison"
+              aria-label="Two saved runs"
+              hidden=""
+            ></section>
+          </section>
+          <button
+            id="technical-details-toggle"
+            type="button"
+            class="secondary panel-toggle"
+            data-label="technical evidence"
+            aria-controls="technical-details"
+            aria-expanded="false"
+          >
+            Show technical evidence
+          </button>
+          <section id="technical-details" hidden="" class="expert-panel">
+            <section id="measurement-details" hidden="">
+              <h3>All measurements &amp; exact results</h3>
+              <div
+                class="table-scroll"
+                role="region"
+                aria-label="All measurements table"
+                tabindex="0"
+              >
+                <table id="metrics">
+                  <thead>
+                    <tr>
+                      <th scope="col">Measurement</th>
+                      <th scope="col">Unchanged</th>
+                      <th scope="col">Median subtraction</th>
+                      <th scope="col">High-pass</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <p>
+                Peaks are algorithmic local-maximum candidates, not verified
+                heartbeats. Timing shift is the mean absolute shift of matched
+                candidates, paired one-to-one within valid segments with a 150
+                ms tolerance in either direction. Waveform difference is
+                centered normalized RMSE: center each signal, then divide their
+                root mean square difference by the comparison signal's standard
+                deviation. It is normalized and unitless. A synthetic reference
+                measures reference error; original samples measure processing
+                change, not physiological accuracy. Neither establishes a
+                universal best method.
+              </p>
+              <pre id="metric-details"></pre>
+            </section>
+            <section id="exclusions-panel" class="" hidden="">
+              <h3>Exclusions &amp; intervals</h3>
+              <div id="exclusions"></div>
+              <pre id="exclusion-details"></pre>
+            </section>
+            <section id="findings-panel" class="" hidden="">
+              <h3>Deterministic findings</h3>
+              <div id="findings"></div>
+            </section>
+            <section id="limits-details" class="">
+              <h3>Research limits</h3>
+              <p>
+                Research inspection only. No clinical interpretation or
+                universal best filter. Originals are preserved; raw samples stay
+                on this local server. Explicitly consented investigations send
+                bounded measurements to Meta. ECG, EEG and other waveforms
+                support inspection only.
+              </p>
+              <div id="limitations"></div>
+            </section>
+          </section>
+        </section>
+
+        <div class="step-actions">
+          <button id="back-inspect" type="button" class="secondary">
+            Back to Inspect</button
+          ><button id="continue-export" type="button">
+            Review results &amp; make report
+          </button>
+        </div>
+      </section>
+      <section
+        id="step-export"
+        class="workflow-step"
+        hidden=""
+        aria-labelledby="export-title"
+      >
+        <div class="stage-heading">
+          <h1 id="export-title" tabindex="-1">Results</h1>
+          <p>
+            Watch the findings video and inspect its supporting evidence. Keep
+            the video, detailed report and exact replay data.
+          </p>
+        </div>
+        <section id="report-workspace">
+          <div class="section-heading">
+            <h2>Selected result</h2>
+            <button id="results-library-open" type="button" class="secondary">
+              Open saved result
+            </button>
+          </div>
+          <label id="report-source-label"
+            >Evidence for this report<select id="report-source"></select
+          ></label>
+          <p id="report-source-identity" hidden></p>
+          <p id="report-scope"></p>
+          <p id="report-empty" role="status"></p>
+          <section id="report-requirements" hidden></section>
+          <section
+            id="findings-workspace"
+            aria-labelledby="findings-title"
+            hidden
+          >
+            <h2 id="findings-title">Findings video</h2>
+            <p id="explanation-provenance"></p>
+            <div id="findings-player"></div>
+            <details id="explanation-options" open>
+              <summary>Meta explanation and saved plans</summary>
+              <p id="explanation-provenance-detail"></p>
+              <p id="explanation-source"></p>
+              <p id="explanation-config" role="status"></p>
+              <p id="explanation-disclosure">
+                Creating a findings video makes one explicit request to Meta
+                with the recorded research question, acquisition notes, target
+                and bounded inspection/comparison summaries, plus available
+                scene choices. Raw samples, names, paths and source hashes stay
+                local. Interpretation is unverified; deterministic evidence
+                supplies all measurements. Playback and downloads make no Meta
+                requests.
+              </p>
+              <form id="explanation-form">
+                <label class="investigation-consent"
+                  ><input
+                    id="explanation-consent"
+                    type="checkbox"
+                    aria-describedby="explanation-disclosure explanation-source"
+                  />I allow this bounded Meta explanation request for the
+                  selected evidence.</label
+                >
+                <div class="button-row">
+                  <button id="explain" type="submit">
+                    Create findings video with Meta</button
+                  ><button
+                    id="explanation-refresh"
+                    type="button"
+                    class="secondary"
+                  >
+                    Refresh explanation status
+                  </button>
+                </div>
+              </form>
+              <label id="explanation-history-label" hidden
+                >Saved explanations<select id="explanation-history"></select
+              ></label>
+              <div class="button-row">
+                <label class="file-control" for="explanation-file"
+                  >Import explanation JSON<input
+                    id="explanation-file"
+                    type="file"
+                    accept=".json,application/json" /></label
+                ><button
+                  id="export-explanation"
+                  type="button"
+                  class="secondary"
+                  disabled
+                >
+                  Download explanation plan
+                </button>
+              </div>
+            </details>
+            <p id="explanation-status" role="status" aria-live="polite"></p>
+          </section>
+          <details id="detailed-report" open>
+            <summary>Detailed report and evidence</summary>
+            <div id="report-visuals"></div>
+            <div id="report-preview"></div>
+            <div class="button-row">
+              <button id="download-report" type="button">
+                Download readable report (.html)</button
+              ><button
+                id="download-report-replay"
+                type="button"
+                class="secondary"
+              >
+                Download replay data (.json)
+              </button>
+            </div>
+            <p id="report-download-status" role="status"></p>
+          </details>
+        </section>
+        <button
+          id="export-technical-toggle"
+          type="button"
+          class="secondary panel-toggle"
+          data-label="additional JSON exports"
+          aria-controls="export-technical"
+          aria-expanded="false"
+        >
+          Show additional JSON exports
+        </button>
+        <section id="export-technical" hidden="">
+          <div class="export-grid">
+            <section
+              class="export-card current-export"
+              aria-labelledby="current-export-title"
+            >
+              <h2 id="current-export-title">Current run</h2>
+              <p id="export-summary"></p>
+              <p>
+                Reproducible JSON: selected original samples, exact recipe,
+                measurements, exclusions, provenance and software versions.
+                Includes the reference when used for synthetic evaluation.
+              </p>
+              <button id="export" type="button">
+                Download manual run JSON
+              </button>
+            </section>
+            <section class="export-card" aria-labelledby="all-export-title">
+              <h2 id="all-export-title">All saved runs</h2>
+              <p id="experiment-export-summary"></p>
+              <p>
+                Reproducible JSON bundle: saved protocol and all retained runs,
+                each with input, recipe and measurements for local replay.
+              </p>
+              <button id="export-experiment" type="button" class="secondary">
+                Download all manual runs JSON
+              </button>
+            </section>
+          </div>
+          <p class="retention-note">
+            Session storage ends on server restart or experiment eviction.
+            Download a bundle to retain your work.
+          </p>
+          <button
+            id="developer-details-toggle"
+            type="button"
+            class="secondary panel-toggle"
+            data-label="reproducibility details"
+            aria-controls="developer-details"
+            aria-expanded="false"
+          >
+            Show reproducibility details
+          </button>
+          <section id="developer-details" class="expert-panel" hidden="">
+            <h3>Developer · request &amp; replay</h3>
+            <p>Current comparison request · POST /api/analyze</p>
+            <pre id="analysis-request"></pre>
+            <p>Replay an exported result locally:</p>
+            <pre>
+python -m signaltrace.replay signaltrace-analysis.json --output replayed.json</pre>
+            <p>Replay an all-runs experiment bundle with the same command:</p>
+            <pre>
+python -m signaltrace.replay signaltrace-experiment.json --output replayed.json</pre>
+          </section>
+        </section>
+
+        <div class="step-actions">
+          <button id="back-compare" type="button" class="secondary">
+            Back to Investigate
+          </button>
+        </div>
+      </section>
+      <footer>
+        <span>SignalTrace · Local biosignal research</span
+        ><span id="meta-status">Meta · configuration unchecked</span>
+      </footer>
+    </main>
+    <dialog
+      id="meta-credentials-dialog"
+      class="credentials-dialog"
+      hidden
+      aria-labelledby="meta-credentials-title"
+      aria-describedby="meta-credentials-description"
+    >
+      <h2 id="meta-credentials-title">Connect Meta, when you're ready</h2>
+      <p id="meta-credentials-description">
+        Add your Meta API key to enable investigations and animated
+        explanations. You can also explore the workspace offline.
+      </p>
+      <p>
+        The key stays in this local server's memory, never browser storage. A
+        server restart clears a key entered here. This is a local, single-user
+        app; do not host it as a shared service.
+      </p>
+      <form id="meta-credentials-form" autocomplete="off">
+        <label for="meta-api-key">Meta API key</label>
+        <input
+          id="meta-api-key"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          autocapitalize="off"
+          autocorrect="off"
+          aria-describedby="meta-credentials-consent"
+        />
+        <p id="meta-credentials-consent">
+          Saving a key does not test it, send recording data or start a model
+          request. Each investigation and explanation still needs your separate
+          consent.
+        </p>
+        <div class="button-row">
+          <button id="meta-credentials-save" type="submit">
+            Save key locally
+          </button>
+          <button id="meta-credentials-skip" type="button" class="secondary">
+            Continue offline
+          </button>
+        </div>
+      </form>
+      <p id="meta-credentials-status" role="status" aria-live="polite"></p>
+      <button id="meta-credentials-clear" type="button" class="secondary">
+        Clear key and use offline
+      </button>
+      <p class="credentials-note">
+        Clear also disables any environment-key fallback for this running
+        server.
+      </p>
+    </dialog>
+    <dialog
+      id="retained-results-dialog"
+      class="retained-dialog"
+      aria-labelledby="retained-results-title"
+    >
+      <div class="section-heading">
+        <h2 id="retained-results-title">Saved investigation results</h2>
+        <button id="retained-results-close" type="button" class="secondary">
+          Close saved results
+        </button>
+      </div>
+      <p>
+        Reopen retained evidence or import its replay JSON. Opening results and
+        playing a saved explanation stay local. Your editable recording stays in
+        place.
+      </p>
+      <div class="button-row">
+        <button id="retained-results-refresh" type="button" class="secondary">
+          Refresh saved results</button
+        ><label class="file-control" for="retained-result-file"
+          >Import investigation JSON<input
+            id="retained-result-file"
+            type="file"
+            accept=".json,application/json"
+        /></label>
+      </div>
+      <p id="retained-results-status" role="status" aria-live="polite"></p>
+      <ul
+        id="retained-results-list"
+        aria-label="Saved investigation results"
+      ></ul>
+      <p>
+        Local retention is bounded to four investigations and four explanations.
+        Keep replay JSON and explanation plans separately for longer storage.
+      </p>
+    </dialog>
+    <dialog
+      id="loading-dialog"
+      class="loading-dialog"
+      aria-labelledby="loading-title"
+      aria-describedby="loading-description"
+    >
+      <span class="activity-track" aria-hidden="true"><span></span></span>
+      <h2 id="loading-title">Working locally</h2>
+      <p id="loading-description">
+        The local request is still running. Keep working or press Escape to
+        dismiss this screen without cancelling it.
+      </p>
+      <button id="keep-working" type="button" autofocus="">Keep working</button>
+    </dialog>
+  </body>
+</html>

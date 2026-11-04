@@ -1,0 +1,12 @@
+{
+  "name": "signaltrace-workspace",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/frontend.test.mjs tests/report.test.mjs tests/evidence.test.mjs tests/findings.test.mjs tests/requirements.test.mjs tests/credentials.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.10"
+  }
+}
