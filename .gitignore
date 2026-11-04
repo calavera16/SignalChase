@@ -1,0 +1,47 @@
+# Credentials and local configuration
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Local recordings, generated results and media
+data/*
+!data/README.md
+outputs/
+exports/
+logs/
+film/
+evaluation/
+examples/
+screenshots/
+recordings/
+datasets/
+.signaltrace-local/
+*.csv
+*.tsv
+*.npy
+*.npz
+*.mat
+*.parquet
+*.wav
+*.mp4
+*.mov
+*.png
+*.jpg
+*.jpeg
+investigation-*.json
+explanation-*.json
+
+# Environments and tool caches
+.venv/
+venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db
