@@ -152,6 +152,138 @@ test("save sends only a bounded local body, clears input synchronously, and neve
   h.controller.destroy();
 });
 
+for (const key of [CANARY, "F".repeat(4096)]) {
+  test(`save trims surrounding paste whitespace and accepts ${key.length} visible ASCII characters`, async () => {
+    const h = setup((path, options) => {
+      if (!options.method) return response();
+      assert.equal(JSON.parse(options.body).api_key, key);
+      assert.equal(options.credentials, "same-origin");
+      return response(true, "browser");
+    });
+    await h.controller.init();
+    h.$("meta-api-key").value = ` \t\u00a0${key}\u00a0\t `;
+    h.submit();
+    h.safe();
+    await tick();
+    assert.deepEqual(h.changes, [{ configured: true, source: "browser" }]);
+    assert.equal(h.$("meta-credentials-save").disabled, false);
+    h.controller.destroy();
+  });
+}
+
+for (const [label, key, message] of [
+  ["empty", " \t ", /Enter a Meta API key/],
+  ["over limit", "F".repeat(4097), /at most 4096 characters/],
+  ["interior space", `${CANARY} FAKE`, /interior whitespace/],
+  ["interior tab", `${CANARY}\tFAKE`, /interior whitespace/],
+  ["interior Unicode whitespace", `${CANARY}\u00a0FAKE`, /interior whitespace/],
+  ["non-ASCII", `${CANARY}\u00e9`, /visible ASCII characters only/],
+  ["hidden control", `${CANARY}\u0001`, /visible ASCII characters only/],
+]) {
+  test(`local validation clears ${label} input without requesting or blocking retry`, async () => {
+    const h = setup((path, options) =>
+      options.method ? response(true, "browser") : response(),
+    );
+    await h.controller.init();
+    h.$("meta-api-key").value = key;
+    h.submit();
+    h.safe();
+    assert.match(h.$("meta-credentials-status").textContent, message);
+    assert.equal(h.calls.length, 1);
+    assert.equal(h.$("meta-credentials-save").disabled, false);
+    assert.equal(h.$("meta-api-key").disabled, false);
+    assert.equal(h.$("meta-credentials-form").getAttribute("aria-busy"), null);
+    assert.equal(h.doc.activeElement, h.$("meta-api-key"));
+    h.$("meta-api-key").value = CANARY;
+    h.submit();
+    await tick();
+    assert.deepEqual(h.changes, [{ configured: true, source: "browser" }]);
+    h.safe();
+    h.controller.destroy();
+  });
+}
+
+for (const [status, message] of [
+  [422, /rejected the key format/],
+  [409, /active job must finish/],
+  [403, /Reload the app from the local server address/],
+  [500, /Check the local server/],
+  [undefined, /Check the local server/],
+]) {
+  for (const remove of [false, true]) {
+    test(`HTTP ${status} ${remove ? "clear" : "save"} uses status-only feedback, clears input, and releases busy state`, async () => {
+      let parsed = false;
+      const h = setup((path, options) => {
+        if (!options.method) return response();
+        return {
+          ok: false,
+          status,
+          json: () => {
+            parsed = true;
+            throw new Error(CANARY);
+          },
+        };
+      });
+      await h.controller.init();
+      h.$("meta-api-key").value = CANARY;
+      if (remove) h.$("meta-credentials-clear").click();
+      else h.submit();
+      h.safe();
+      await tick();
+      assert.match(h.$("meta-credentials-status").textContent, message);
+      if (status !== 409)
+        assert.doesNotMatch(
+          h.$("meta-credentials-status").textContent,
+          /active job/,
+        );
+      assert.equal(parsed, false);
+      assert.equal(h.$("meta-credentials-save").disabled, false);
+      assert.equal(h.$("meta-api-key").disabled, false);
+      assert.equal(
+        h.$("meta-credentials-form").getAttribute("aria-busy"),
+        "false",
+      );
+      assert.deepEqual(h.changes, []);
+      h.safe();
+      h.controller.destroy();
+    });
+  }
+}
+
+test("rejected fetch clears the input immediately and allows retry without exposing its error", async () => {
+  let reject,
+    attempts = 0;
+  const pending = new Promise((resolve, rejectRequest) => {
+    reject = rejectRequest;
+  });
+  const h = setup((path, options) => {
+    if (!options.method) return response();
+    return ++attempts === 1 ? pending : response(true, "browser");
+  });
+  await h.controller.init();
+  h.$("meta-api-key").value = CANARY;
+  h.submit();
+  h.safe();
+  h.$("meta-api-key").value = CANARY;
+  h.submit();
+  h.safe();
+  assert.equal(attempts, 1);
+  reject(new Error(CANARY));
+  await tick();
+  assert.match(
+    h.$("meta-credentials-status").textContent,
+    /Check the local server/,
+  );
+  assert.doesNotMatch(h.$("meta-credentials-status").textContent, /active job/);
+  assert.equal(h.$("meta-credentials-save").disabled, false);
+  h.$("meta-api-key").value = CANARY;
+  h.submit();
+  await tick();
+  assert.deepEqual(h.changes, [{ configured: true, source: "browser" }]);
+  h.safe();
+  h.controller.destroy();
+});
+
 test("clear is explicit DELETE with CSRF headers, no payload, and offline presence", async () => {
   const h = setup((path, options) => {
     if (!options.method) return response(true, "environment");

@@ -193,8 +193,8 @@
     },
     {
       "path": "signaltrace/web/credentials.js",
-      "bytes": 7470,
-      "sha256": "f94a9cb6d624b46bebdb8cd404911e5b393d381e265038e6548bdfb90b126c40"
+      "bytes": 9188,
+      "sha256": "13d4dd59f20b6a00715fb42b1ff52fe969308d0ae44bd8be3e552aeea76745b2"
     },
     {
       "path": "signaltrace/web/evidence.js",
@@ -228,8 +228,8 @@
     },
     {
       "path": "tests/credentials.test.mjs",
-      "bytes": 10356,
-      "sha256": "70bae848dcbaa0c932427762814f9a78a7827effcf2dc509b5a188637b43fd6a"
+      "bytes": 14999,
+      "sha256": "9178bd53113d0659f6e6a31dc0d3cf2dc91bb26cb0e85a955ef24de700cfdaf5"
     },
     {
       "path": "tests/evidence.test.mjs",

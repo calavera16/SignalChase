@@ -77,6 +77,19 @@ export function createCredentials(
       throw new Error("invalid credential presence");
     return { configured: data.configured, source: data.source };
   }
+  function mutationFailure(statusCode) {
+    // Status only: failed bodies and exception messages may reflect credentials.
+    switch (statusCode) {
+      case 422:
+        return "The local server rejected the key format. Paste the key again using 1–4096 visible ASCII characters with no spaces. No connection test was made.";
+      case 409:
+        return "An active job must finish before changing the local Meta key. Try again after it finishes; no connection test was made.";
+      case 403:
+        return "The local server rejected this page's request. Reload the app from the local server address and try again; no connection test was made.";
+      default:
+        return "Could not change the local Meta key. Check the local server and try again; no connection test was made.";
+    }
+  }
   async function mutate(event) {
     event.preventDefault();
     if (destroyed || busy) {
@@ -84,11 +97,28 @@ export function createCredentials(
       return;
     }
     const remove = event.currentTarget === clearButton;
-    if (!remove && !input.value.trim()) {
-      input.value = "";
-      status.textContent = "Enter a Meta API key, or continue offline.";
-      input.focus();
-      return;
+    if (!remove) {
+      // Only surrounding paste whitespace is removed; interior characters stay
+      // intact and must meet the same visible-ASCII bound as the local server.
+      input.value = input.value.trim();
+      let validationMessage = "";
+      if (!input.value)
+        validationMessage = "Enter a Meta API key, or continue offline.";
+      else if (input.value.length > 4096)
+        validationMessage =
+          "The key is too long. Paste a key with at most 4096 characters.";
+      else if (/\s/.test(input.value))
+        validationMessage =
+          "The key contains spaces or other whitespace inside it. Paste the key again without interior whitespace.";
+      else if (/[^\x21-\x7e]/.test(input.value))
+        validationMessage =
+          "The key must use visible ASCII characters only. Paste the original key again without hidden or non-ASCII characters.";
+      if (validationMessage) {
+        input.value = "";
+        status.textContent = validationMessage;
+        input.focus();
+        return;
+      }
     }
     const token = ++epoch;
     busy = true;
@@ -116,15 +146,19 @@ export function createCredentials(
       } finally {
         input.value = "";
       }
-      const result = await presence(await pending);
+      const response = await pending;
+      if (!response.ok) {
+        if (!destroyed && token === epoch)
+          status.textContent = mutationFailure(response.status);
+        return;
+      }
+      const result = await presence(response);
       if (destroyed || token !== epoch) return;
       reflect(result);
       // Presence only; the callback refreshes local configuration, never models.
       await onChange(result);
     } catch {
-      if (!destroyed && token === epoch)
-        status.textContent =
-          "Could not change the local Meta key. An active job may need to finish. Check the local server and try again; no connection test was made.";
+      if (!destroyed && token === epoch) status.textContent = mutationFailure();
     } finally {
       if (destroyed || token === epoch) input.value = "";
       if (!destroyed && token === epoch) {
