@@ -1,11 +1,16 @@
 # Third-party UI notices
 
-Local HTML/CSS adaptations; no remote code or dependencies.
+These notices cover local HTML/CSS adaptations and a design workflow.
+The browser UI loads no remote scripts, stylesheets or fonts. Python runtime
+and npm development dependencies are declared in `requirements.txt` and
+`package.json`; their implementations are installed separately and are not
+included in this source distribution.
 
 ## Unslop design workflow
 
 Adapted the Unslop UI polish workflow by Damir Sokolovsky
 ([@heydamir](https://x.com/heydamir)), https://heydamir.design/unslop.
+Source: [heydamir/unslop](https://github.com/heydamir/unslop).
 Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Applied to SignalTrace's existing instrument studio direction: spacing, control
 alignment, restrained callouts, instructional copy and measured-result hierarchy.
