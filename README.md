@@ -6,7 +6,7 @@ SignalTrace is a local research workspace that turns a recording and a research 
 
 **Created by Yeon Jun Kim — solo creator and contributor.**
 
-[Project overview video](https://github.com/calavera16/SignalChase) · [Architecture details](docs/ARCHITECTURE.md) · [Data policy](docs/DATA_POLICY.md)
+[Demo video](https://youtu.be/FOfwBFH0nXI) · [Architecture details](docs/ARCHITECTURE.md) · [Data policy](docs/DATA_POLICY.md)
 ## Why this exists
 
 A preprocessing choice can change detected candidate peaks, their timing and their count. A cleaner-looking trace alone does not establish whether those changes are acceptable for the measurement an experiment needs.
